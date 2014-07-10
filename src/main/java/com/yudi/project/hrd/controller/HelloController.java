@@ -14,7 +14,7 @@ public class HelloController {
 
 	
 	@RequestMapping(method=RequestMethod.GET)
-	public String printWelcome(@RequestParam String nameString @Required=false, ModelMap model){
+	public String printWelcome(ModelMap model){
 	
 		model.addAttribute("message", "Spring 4 hello World");
 		
