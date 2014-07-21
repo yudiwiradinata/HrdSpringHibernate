@@ -16,13 +16,13 @@ import com.yudi.project.hrd.dao.UserDao;
 import com.yudi.project.hrd.model.User;
 
 @Controller
-@RequestMapping("/home")
+
 public class HomeController {
 
 	@Autowired
 	UserDao userDao;
 	
-	@RequestMapping(method=RequestMethod.GET)
+	@RequestMapping(value="/home",method=RequestMethod.GET)
 	public ModelAndView home(){
 		List<User> listUser = userDao.getAllUser();
 		ModelAndView model =  new ModelAndView("home");
@@ -33,7 +33,7 @@ public class HomeController {
 	}
 	
 	@RequestMapping(value="/userdetail", method=RequestMethod.GET)
-	public ModelAndView userDetail(@RequestParam int userId){
+	public ModelAndView userDetail(@RequestParam(value="user_id", required=false) int userId){
 		ModelAndView model = new ModelAndView("detail");
 		model.addObject("userDetail", userDao.getUserById(userId));
 		return model;
