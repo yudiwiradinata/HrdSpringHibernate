@@ -1,5 +1,7 @@
 package com.yudi.project.hrd.dao;
 
+import java.beans.Introspector;
+import java.util.Iterator;
 import java.util.List;
 
 import org.junit.Before;
@@ -10,44 +12,64 @@ import org.springframework.web.servlet.DispatcherServlet;
 
 import com.yudi.project.hrd.model.User;
 
-
 public class TestUser {
 
 	FileSystemXmlApplicationContext context;
 	UserDao userDao;
-	
+
 	@Before
-	public void init(){		
-		context = new FileSystemXmlApplicationContext("/src/main/webapp/WEB-INF/applicationContext.xml");
+	public void init() {
+		context = new FileSystemXmlApplicationContext(
+				"/src/main/webapp/WEB-INF/applicationContext.xml");
 		userDao = (UserDao) context.getBean("userDao");
 	}
 
-	
-	public void testGetAll(){
-		
+	public void testGetAll() {
+
 		List<User> list = userDao.getAllUser();
-		
+
 		for (int i = 0; i < list.size(); i++) {
-			System.out.println("  "+list.get(i).getUsername());
+			System.out.println("  " + list.get(i).getUsername());
 		}
+
+	}
+
+	@Test
+	public void testFindById() {
+
+		User user = userDao.getUserById(2);
+
+		System.out.println("  " + user.getUsername());
+		System.out.println("  " + user.getPassword());		
+		System.out.println("  " + user.getEmail());
+
+	}
+
+	public void testDelete() {
+		// TODO Auto-generated method stub		
+		userDao.delete(new Integer(1));
 		
 	}
 	
 	@Test
-	public void testSave(){
-		
-	/*	User user = new User();
-		user.setUsername("Kampret");
-		user.setPassword("Kampret2");
-		user.setEmail("er@fd.co");
-		*/
-		
-		int res = userDao.delete(17);
-		System.out.println("Id user "+res);
-		
-		
-		
+	public void testUpdate() {
+		// TODO Auto-generated method stub
+		User user = userDao.getUserById(2);
+		user.setEmail("Yudi3@prawed");
+		userDao.update(user);
 		
 	}
 	
+	public void testSave() {
+
+		User user = new User();
+		user.setUsername("Kampret4");
+		user.setPassword("Kampret2");
+		user.setEmail("er@fd.co");
+
+		userDao.save(user);
+		//System.out.println("Id user " + res);
+
+	}
+
 }

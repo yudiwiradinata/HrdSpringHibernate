@@ -9,8 +9,15 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.SelectBeforeUpdate;
+
 @Entity
 @Table(name="users")
+@DynamicInsert
+@DynamicUpdate
+@SelectBeforeUpdate
 public class User implements Serializable{
 
 	/**

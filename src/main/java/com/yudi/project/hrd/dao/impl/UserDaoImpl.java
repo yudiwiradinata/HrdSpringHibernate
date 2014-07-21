@@ -2,6 +2,9 @@ package com.yudi.project.hrd.dao.impl;
 
 import java.util.List;
 
+import javax.jws.soap.SOAPBinding.Use;
+
+import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,40 +19,43 @@ import com.yudi.project.hrd.model.User;
 @Transactional(readOnly = true)
 public class UserDaoImpl implements UserDao {
 
-	@Autowired
+	
 	SessionFactory sessionFactory;
-
-	@Transactional(readOnly = false)
-	public int save(User user) {
-		// TODO Auto-generated method stub
-		int result;
-		try {
-			sessionFactory.getCurrentSession().persist(user);// save(user);
-			result = user.getId();
-		} catch (HibernateException e) {
-			// TODO: handle exception
-			System.out.println(e.getMessage());
-			result = 0;
-		}
-		return result;
+	
+	@Autowired
+	public UserDaoImpl(SessionFactory sessionFactory) {
+		// TODO Auto-generated constructor stub
+		this.sessionFactory = sessionFactory;
 	}
 
-	public int delete(int userId) {
-		// TODO Auto-generated method stub
-		int result = 1;
-		User user = (User) sessionFactory.getCurrentSession().load(User.class,
-				userId);
+	@Transactional(readOnly = false)
+	public void save(User user) {
+		// TODO Auto-generated method stub		
+		try {
+			sessionFactory.getCurrentSession().saveOrUpdate(user);// save(user);
+			
+		} catch (HibernateException e) {
+			// TODO: handle exception
+			System.out.println(e.getMessage());			
+		}
+		
+	}
+
+	@Transactional(readOnly = false)
+	public void delete(int userId) {
+		// TODO Auto-generated method stub		
+		User user = this.getUserById(userId);
+		System.out.println("User delete "+user.getUsername());	
 		try {
 			sessionFactory.getCurrentSession().delete(user);
 		} catch (HibernateException e) {
 			// TODO: handle exception
-			System.out.println("error delete " + e.getMessage());
-			result = 0;
+			System.out.println("error delete " + e.getMessage());			
 		}
-
-		return result;
+		
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<User> getAllUser() {
 		// TODO Auto-generated method stub
 		return sessionFactory.getCurrentSession().createQuery("from User ")
@@ -57,15 +63,26 @@ public class UserDaoImpl implements UserDao {
 	}
 
 	public User getUserById(int userId) {
-		// TODO Auto-generated method stub
+		// TODO Auto-generated method stub		
 		User user = null;
 		try {
-			user = (User) sessionFactory.getCurrentSession().load(User.class, userId);
+			user = (User) sessionFactory.getCurrentSession().get(User.class, userId);			
 		} catch (HibernateException e) {
 			// TODO: handle exception
 			System.err.println("Erro getUserById "+e.getMessage());
 		}
 		return user;
+	}
+
+	@Transactional(readOnly = false)
+	public void update(User user) {
+		// TODO Auto-generated method stub
+		try {
+			sessionFactory.getCurrentSession().update(user);			
+		} catch (HibernateException e) {
+			// TODO: handle exception
+			System.err.println("Erro update "+e.getMessage());
+		}
 	}
 
 }
