@@ -24,6 +24,7 @@ public class TestUser {
 		userDao = (UserDao) context.getBean("userDao");
 	}
 
+	@Test
 	public void testGetAll() {
 
 		List<User> list = userDao.getAllUser();
@@ -34,7 +35,7 @@ public class TestUser {
 
 	}
 
-	@Test
+	
 	public void testFindById() {
 
 		User user = userDao.getUserById(2);
@@ -50,8 +51,7 @@ public class TestUser {
 		userDao.delete(new Integer(1));
 		
 	}
-	
-	@Test
+		
 	public void testUpdate() {
 		// TODO Auto-generated method stub
 		User user = userDao.getUserById(2);

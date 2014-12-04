@@ -10,5 +10,6 @@ public interface UserDao {
 	public void delete(int userId);
 	public void update(User user);	
 	public List<User> getAllUser();
+	public List<User> getAllUser(int iDisplayStart,int iDisplayLength);
 	public User getUserById(int userId);
 }

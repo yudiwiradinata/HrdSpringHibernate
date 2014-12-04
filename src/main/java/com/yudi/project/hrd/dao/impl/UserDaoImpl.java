@@ -19,9 +19,8 @@ import com.yudi.project.hrd.model.User;
 @Transactional(readOnly = true)
 public class UserDaoImpl implements UserDao {
 
-	
 	SessionFactory sessionFactory;
-	
+
 	@Autowired
 	public UserDaoImpl(SessionFactory sessionFactory) {
 		// TODO Auto-generated constructor stub
@@ -30,29 +29,29 @@ public class UserDaoImpl implements UserDao {
 
 	@Transactional(readOnly = false)
 	public void save(User user) {
-		// TODO Auto-generated method stub		
+		// TODO Auto-generated method stub
 		try {
 			sessionFactory.getCurrentSession().saveOrUpdate(user);// save(user);
-			
+
 		} catch (HibernateException e) {
 			// TODO: handle exception
-			System.out.println(e.getMessage());			
+			System.out.println(e.getMessage());
 		}
-		
+
 	}
 
 	@Transactional(readOnly = false)
 	public void delete(int userId) {
-		// TODO Auto-generated method stub		
+		// TODO Auto-generated method stub
 		User user = this.getUserById(userId);
-		System.out.println("User delete "+user.getUsername());	
+		System.out.println("User delete " + user.getUsername());
 		try {
 			sessionFactory.getCurrentSession().delete(user);
 		} catch (HibernateException e) {
 			// TODO: handle exception
-			System.out.println("error delete " + e.getMessage());			
+			System.out.println("error delete " + e.getMessage());
 		}
-		
+
 	}
 
 	@SuppressWarnings("unchecked")
@@ -63,13 +62,14 @@ public class UserDaoImpl implements UserDao {
 	}
 
 	public User getUserById(int userId) {
-		// TODO Auto-generated method stub		
+		// TODO Auto-generated method stub
 		User user = null;
 		try {
-			user = (User) sessionFactory.getCurrentSession().get(User.class, userId);			
+			user = (User) sessionFactory.getCurrentSession().get(User.class,
+					userId);
 		} catch (HibernateException e) {
 			// TODO: handle exception
-			System.err.println("Erro getUserById "+e.getMessage());
+			System.err.println("Erro getUserById " + e.getMessage());
 		}
 		return user;
 	}
@@ -78,11 +78,26 @@ public class UserDaoImpl implements UserDao {
 	public void update(User user) {
 		// TODO Auto-generated method stub
 		try {
-			sessionFactory.getCurrentSession().update(user);			
+			sessionFactory.getCurrentSession().update(user);
 		} catch (HibernateException e) {
 			// TODO: handle exception
-			System.err.println("Erro update "+e.getMessage());
+			System.err.println("Erro update " + e.getMessage());
 		}
+	}
+
+	@SuppressWarnings("unchecked")
+	@Transactional(readOnly = false)
+	public List<User> getAllUser(int iDisplayStart, int iDisplayLength) {
+		// TODO Auto-generated method stub
+		try {
+			return sessionFactory.getCurrentSession().createQuery("from User")
+					.setMaxResults(iDisplayLength)
+					.setFirstResult(iDisplayStart).list();
+		} catch (HibernateException e) {
+			// TODO: handle exception
+			System.err.println("Erro update " + e.getMessage());
+			return null;
+		}		
 	}
 
 }
