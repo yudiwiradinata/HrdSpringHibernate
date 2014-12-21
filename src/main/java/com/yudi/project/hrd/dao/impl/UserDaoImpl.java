@@ -1,17 +1,26 @@
 package com.yudi.project.hrd.dao.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.jws.soap.SOAPBinding.Use;
 
+import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Disjunction;
+import org.hibernate.criterion.LogicalExpression;
+import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.mysql.fabric.xmlrpc.base.Array;
 import com.yudi.project.hrd.dao.UserDao;
 import com.yudi.project.hrd.model.User;
 
@@ -87,17 +96,60 @@ public class UserDaoImpl implements UserDao {
 
 	@SuppressWarnings("unchecked")
 	@Transactional(readOnly = false)
-	public List<User> getAllUser(int iDisplayStart, int iDisplayLength) {
+	public List<User> getAllUser(int iDisplayStart, int iDisplayLength, String keyword,int coloumn,String sort) {
 		// TODO Auto-generated method stub
+		
+		
 		try {
-			return sessionFactory.getCurrentSession().createQuery("from User")
-					.setMaxResults(iDisplayLength)
-					.setFirstResult(iDisplayStart).list();
+			List<User> users = new ArrayList<User>();
+			if(!"".equals(keyword)){							
+				users = sessionFactory.getCurrentSession().createQuery("FROM User WHERE username like :keyword OR password like :keyword OR email like :keyword order by "+coloumn+" "+sort)
+						.setParameter("keyword", "%"+keyword+"%")
+						.setMaxResults(iDisplayLength)
+						.setFirstResult(iDisplayStart)
+						.list();		
+			}else{
+				users = sessionFactory.getCurrentSession().createQuery("from User order by "+coloumn+" "+sort)
+						.setMaxResults(iDisplayLength)
+						.setFirstResult(iDisplayStart).list();					
+			}
+					
+			
+			return users; 
+			
 		} catch (HibernateException e) {
 			// TODO: handle exception
 			System.err.println("Erro update " + e.getMessage());
 			return null;
 		}		
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<User> getUserByString(String keyword) {
+		// TODO Auto-generated method stub
+		try {
+			return sessionFactory.getCurrentSession()
+					.createQuery("FROM User WHERE username like :keyword OR password like :keyword OR email like :keyword")
+					.setParameter("keyword", "%"+keyword+"%").list();					
+		} catch (HibernateException e) {
+			// TODO: handle exception
+			System.err.println("Erro update " + e.getMessage());
+			return null;
+		}		
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<User> getListUserById(List<Integer> ids) {
+		// TODO Auto-generated method stub
+		try {
+			return sessionFactory.getCurrentSession()
+					.createQuery("FROM User WHERE id in (:ids)")
+					.setParameterList("ids",ids).list();					
+		} catch (HibernateException e) {
+			// TODO: handle exception
+			System.err.println("Erro update " + e.getMessage());
+			return null;
+		}	
 	}
 
 }
