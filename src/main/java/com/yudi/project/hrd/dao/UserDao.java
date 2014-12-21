@@ -10,6 +10,9 @@ public interface UserDao {
 	public void delete(int userId);
 	public void update(User user);	
 	public List<User> getAllUser();
-	public List<User> getAllUser(int iDisplayStart,int iDisplayLength);
+	public List<User> getAllUser(int iDisplayStart,int iDisplayLength, String keyword,int coloumn,String sort);
 	public User getUserById(int userId);
+	public List<User> getListUserById(List<Integer> ids);
+	public List<User> getUserByString(String keyword);
+	
 }
