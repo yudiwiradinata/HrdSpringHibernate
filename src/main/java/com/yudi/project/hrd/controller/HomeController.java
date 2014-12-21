@@ -1,7 +1,11 @@
 package com.yudi.project.hrd.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -10,6 +14,8 @@ import org.springframework.beans.factory.annotation.Required;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,25 +35,39 @@ public class HomeController {
 	@RequestMapping(value = "/home", method = RequestMethod.GET)
 	public ModelAndView home() {
 		List<User> listUser = userDao.getAllUser();
-		ModelAndView model = new ModelAndView("home");
+		ModelAndView model = new ModelAndView("home2");
 		model.addObject("userList", listUser);
 
 		return model;
 
 	}
 
-	@RequestMapping(value = "/home2", produces = "application/json")
+	@RequestMapping(value = "/home2", method = RequestMethod.POST ,produces = "application/json")
 	public @ResponseBody
-	String showUser(@RequestParam int iDisplayStart,
-			@RequestParam int iDisplayLength, @RequestParam int sEcho) {
+	String showUser(
+			HttpServletRequest request,
+            HttpServletResponse response		
+			) {
+		  
+		String start = request.getParameter("start");
+		String draw	 = request.getParameter("draw");
+		String length = request.getParameter("length");
+		String search = request.getParameter("search[value]");
+		String order = request.getParameter("order[0][dir]");
+		String column = request.getParameter("order[0][column]");				
 		
 		JsonObject<User> data = new JsonObject<User>();
-		List<User> users2 = userDao.getAllUser();
-		List<User> users = userDao.getAllUser(iDisplayStart, iDisplayLength);
+		List<User> users2 = userDao.getUserByString(search);
+		List<User> users = new ArrayList<User>();	
+		 
+		users = userDao.getAllUser(Integer.parseInt(start), Integer.parseInt(length),search,(Integer.parseInt(column) + 1), order);
+	
 		data.setAaData(users);
+		
 		data.setiTotalDisplayRecords(users2.size());
+		
 		data.setiTotalRecords(users2.size());
-		data.setsEcho(sEcho);
+		data.setsEcho(Integer.parseInt(draw));
 
 		return toJson(data);
 
@@ -61,6 +81,28 @@ public class HomeController {
 		return model;
 	}
 
+	@RequestMapping(value = "/detail", method = RequestMethod.POST)
+	public ModelAndView detail(
+			@ModelAttribute User user,
+			HttpServletRequest request,
+            HttpServletResponse response
+			) {
+		ModelAndView model = new ModelAndView("detail2");
+		String select = request.getParameter("select");
+		List<Integer> ids = new ArrayList<Integer>();
+		//getListUserById
+		String[] split = select.split(",");
+		for(int i=0; i < split.length; i++){
+			ids.add(Integer.parseInt(split[i]));
+		}
+		List<User> users = userDao.getListUserById(ids);
+		
+		model.addObject("users", users);
+		
+		return model;
+	}
+
+	
 	@SuppressWarnings("unused")
 	private String toJson(JsonObject<?> dt) {
 		ObjectMapper mapper = new ObjectMapper();
