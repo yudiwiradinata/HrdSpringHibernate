@@ -20,9 +20,17 @@
 			            "url": "./home2",
 			            "type": "POST"			            
 			        },
-			        "fnCreatedRow": function( nRow, aData, iDataIndex ) {			        
+			        "fnCreatedRow": function( nRow, aData, iDataIndex ) {			        				        	
 			            $(nRow).attr('id', aData['id']);
-			           	$(nRow).find("a").attr("href", "./userdetail?user_id="+aData['id']);			            
+			           	$(nRow).find('a[name=detail]').attr("href", "./userdetail?user_id="+aData['id']);	
+			           	$(nRow).find('a[name=detail1]').attr("href", "./userdetail?user_id="+aData['id']);	
+			           	$(nRow).find('a[name=detail2]').attr("href", "./userdetail?user_id="+aData['id']);				           			           	
+						if(aData['username'] !== ""){			        		
+							$(nRow).find('a[name=detail3]').attr("href", "./userdetail3?user_id="+aData['id']);							
+			        	}else{
+			        		$(nRow).find('a[name=detail3]').remove();
+			        	}
+			           	
 			        },
 			        "rowCallback": function( row, data ) {			        				      			        	
 			            if ( $.inArray(parseInt(data['id']), selected) != -1 ) {
@@ -40,7 +48,10 @@
 			                "data":           null,
 			                "defaultContent": 
 			                	'<input type="checkbox" name="aCheckBox" class="dt_checked"/>'+
-			            		'&nbsp; <a> Detail </a>'
+			            		'&nbsp; <a name="detail"> Detail </a>'+
+			            		'&nbsp; <a name="detail1"> Detail1 </a>'+
+			            		'&nbsp; <a name="detail2"> Detail2 </a>'+
+			            		'&nbsp; <a name="detail3"> Detail3 </a>'
 			            },
 			        ]
 
