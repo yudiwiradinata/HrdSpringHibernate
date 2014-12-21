@@ -85,13 +85,15 @@ public class HomeController {
 		ModelAndView model = new ModelAndView("detail2");
 		String select = request.getParameter("select");
 		List<Integer> ids = new ArrayList<Integer>();
+		List<User> users = new ArrayList<User>();
 		//getListUserById
-		String[] split = select.split(",");
-		for(int i=0; i < split.length; i++){
-			ids.add(Integer.parseInt(split[i]));
+		if(!"".equals(select)){
+			String[] split = select.split(",");	
+			for(int i=0; i < split.length; i++){
+				ids.add(Integer.parseInt(split[i]));
+			}
+			users = userDao.getListUserById(ids);
 		}
-		List<User> users = userDao.getListUserById(ids);
-		
 		model.addObject("users", users);
 		
 		return model;
