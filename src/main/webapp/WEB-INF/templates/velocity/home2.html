@@ -75,13 +75,27 @@
 	        $(this).toggleClass('selected');
 	    } );
 	    
+	    $("#btnSubmit").click(function() {
+			console.log("Masuk");
+			if(typeof selected[0] !== 'undefined' && selected[0] !== null){
+				document.getElementById("form").action = "./detail"; 
+				document.getElementById("form").submit();
+			}else{
+				alert("Pilih dulu");
+				return false;
+			}
+			
+		});
+		
+	    
 	});
 		
+	
 </script>
 
 </head>
 <body>
-<form method="POST" action="./detail"  id="form" name="form">
+<form method="POST" id="form" name="form">
 	<input type="hidden" id="select" name="select" value="" />
 	
 	<table width="70%" style="border: 3px; background: rgb(243, 244, 248);">
