@@ -27,10 +27,10 @@ public class TestUser {
 	@Test
 	public void testGetAll() {
 
-		List<User> list = userDao.getAllUser();
+		List<User> list = userDao.getAllUser(0, 10, "", 3, "ASC");
 
-		for (int i = 0; i < list.size(); i++) {
-			System.out.println("  " + list.get(i).getUsername());
+		for (int i = 0; i <= list.size(); i++) {
+			System.out.println("  ETT " + list.get(i).getUsername());
 		}
 
 	}

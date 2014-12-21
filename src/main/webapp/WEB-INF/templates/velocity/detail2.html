@@ -2,7 +2,6 @@
 <head>
 <title>:: Detail of user ::</title>
 
-
 <script type="text/javascript"
 	src="//code.jquery.com/jquery-1.10.2.min.js"></script>
 
@@ -13,19 +12,21 @@
 		});
 	});
 </script>
-
 </head>
 <body>
 
 	<table>
+		#foreach( $user in $users )
 		<tr>
 			<td>Nama</td>
-			<td>$userDetail.Username</td>
+			<td>$user.Username</td>
 		</tr>
 		<tr>
 			<td>Email</td>
-			<td>$userDetail.Email</td>
+			<td>$user.Email</td>
 		</tr>
+		#end
+
 	</table>
 
 	<button type="button" id="btnCancel" onclick="javascript:back()">Back

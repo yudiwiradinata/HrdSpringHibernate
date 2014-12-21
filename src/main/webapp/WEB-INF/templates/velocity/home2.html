@@ -1,0 +1,99 @@
+<html>
+<head>
+<title>:: List of All Person ::</title>
+
+<link rel="stylesheet" type="text/css"
+	href="//cdn.datatables.net/1.10.0/css/jquery.dataTables.css">
+<script type="text/javascript"
+	src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+<script type="text/javascript"
+	src="//cdn.datatables.net/1.10.0/js/jquery.dataTables.js"></script>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		 var selected = [];
+		 	
+		$("#example").dataTable({
+			        "processing": true,
+			        "serverSide": true,
+			        "ajax": {
+			            "url": "./home2",
+			            "type": "POST"			            
+			        },
+			        "fnCreatedRow": function( nRow, aData, iDataIndex ) {			        
+			            $(nRow).attr('id', aData['id']);
+			           	$(nRow).find("a").attr("href", "./userdetail?user_id="+aData['id']);			            
+			        },
+			        "rowCallback": function( row, data ) {			        				      			        	
+			            if ( $.inArray(parseInt(data['id']), selected) != -1 ) {
+			            	$(row).find("input[type=checkbox]").prop( "checked", true );
+			                $(row).addClass('selected');
+			            }
+			        },
+			        "columns": [
+			            { "data": "username" },
+			            { "data": "password" },
+			            { "data": "email" },
+			            {			          
+			            	"class":          "cek",
+			                "orderable":      false,
+			                "data":           null,
+			                "defaultContent": 
+			                	'<input type="checkbox" name="aCheckBox" class="dt_checked"/>'+
+			            		'&nbsp; <a> Detail </a>'
+			            },
+			        ]
+
+		});
+
+		
+	    $('#example tbody').on('click', 'tr', function () {
+	        var id = this.id;
+	        var index = $.inArray(parseInt(id), selected);
+	 
+	        if ( index === -1 ) {
+	            selected.push( parseInt(id) );	  
+	            $(this).find("input[type=checkbox]").prop( "checked", true );
+	            $('#select').val(selected);	
+	        } else {
+	            selected.splice( index, 1 );
+	            $(this).find("input[type=checkbox]").prop( "checked", false );
+	            $('#select').val(selected);	
+	        }	  
+	        	        
+	        $(this).toggleClass('selected');
+	    } );
+	    
+	});
+		
+</script>
+
+</head>
+<body>
+<form method="POST" action="./detail"  id="form" name="form">
+	<input type="hidden" id="select" name="select" value="" />
+	
+	<table width="70%" style="border: 3px; background: rgb(243, 244, 248);">
+		<tr>
+			<td>
+				<table id="example" class="display" cellspacing="0" width="100%">
+					<thead>					
+						<tr>
+							<th>Name</th>
+							<th>Password</th>
+							<th>Email</th>
+							<th>Action</th>
+												
+						</tr>
+					</thead>
+				
+				</table>
+			</td>
+		</tr>
+	</table>
+	
+	<button type="submit" id="btnSubmit" >CHOOSE </button>
+	
+</form>
+</body>
+</html>

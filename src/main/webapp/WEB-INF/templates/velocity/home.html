@@ -17,6 +17,7 @@
 			"bServerSide" : true,
 			 "bLenthChange" : false,
 			 "iDisplayLength" : 10,
+			 //"iDisplayStart" : 10,
 			"sAjaxSource" : "./home2",
 			"aoColumns" : [ {
 				"sTitle" : "User ID",
@@ -43,7 +44,7 @@
 			"fnServerData" : function(sSource, aoData, fnCallback) {
 				    $.ajax({
 				     "dataType" : 'json',
-				     "type" : "GET",
+				     "type" : "POST",
 				     "url" : sSource,
 				     "data" : aoData,
 				     "success" : fnCallback
